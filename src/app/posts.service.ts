@@ -1,4 +1,4 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Subject, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
@@ -28,19 +28,24 @@ export class PostsService {
 
   fetchPosts() {
     return this.http
-      .get<{ [key: string]: Post }>('https://ng-course-project-d091d.firebaseio.com/posts.json')
+      .get<{ [key: string]: Post }>(
+        'https://ng-course-project-d091d.firebaseio.com/posts.json',
+        {
+          headers: new HttpHeaders({'Custom-Header': 'Hello'})
+        }
+      )
       .pipe(map(responseData => {
-        const array: Post[] = [];
-        if (!responseData) {
-          return array;
-        }
-        for (const key of Object.keys(responseData)) {
-          if (responseData.hasOwnProperty(key)) {
-            array.push({...responseData[key], id: key});
+          const array: Post[] = [];
+          if (!responseData) {
+            return array;
           }
-        }
-        return array;
-      }),
+          for (const key of Object.keys(responseData)) {
+            if (responseData.hasOwnProperty(key)) {
+              array.push({...responseData[key], id: key});
+            }
+          }
+          return array;
+        }),
         catchError(err => {
           // some logic
           return throwError(err);
