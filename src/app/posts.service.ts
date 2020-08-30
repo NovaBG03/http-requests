@@ -1,4 +1,4 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Subject, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
@@ -31,7 +31,10 @@ export class PostsService {
       .get<{ [key: string]: Post }>(
         'https://ng-course-project-d091d.firebaseio.com/posts.json',
         {
-          headers: new HttpHeaders({'Custom-Header': 'Hello'})
+          headers: new HttpHeaders({'Custom-Header': 'Hello'}),
+          params: new HttpParams()
+            .append('print', 'pretty')
+            .append('custom', 'key'),
         }
       )
       .pipe(map(responseData => {
