@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Subject, throwError} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 
 import {Post} from './post.model';
 
@@ -40,7 +40,11 @@ export class PostsService {
           }
         }
         return array;
-      }));
+      }),
+        catchError(err => {
+          // some logic
+          return throwError(err);
+        }));
   }
 
   deletePosts() {
