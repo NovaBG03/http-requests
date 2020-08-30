@@ -2,7 +2,7 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Post} from './post.model';
-import {map} from "rxjs/operators";
+import {map} from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class PostsService {
@@ -22,7 +22,7 @@ export class PostsService {
   }
 
   fetchPosts() {
-    this.http
+    return this.http
       .get<{ [key: string]: Post }>('https://ng-course-project-d091d.firebaseio.com/posts.json')
       .pipe(map(responseData => {
         const array: Post[] = [];
@@ -32,9 +32,6 @@ export class PostsService {
           }
         }
         return array;
-      }))
-      .subscribe(posts => {
-        console.log(posts);
-      });
+      }));
   }
 }
