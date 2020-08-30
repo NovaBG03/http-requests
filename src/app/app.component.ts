@@ -12,17 +12,13 @@ import {PostsService} from './posts.service';
 export class AppComponent implements OnInit {
   loadedPosts: Post[] = [];
   isFetching = false;
+  error: string = null;
 
   constructor(private http: HttpClient, private postsService: PostsService) {
   }
 
   ngOnInit() {
-    this.isFetching = true;
-    this.postsService.fetchPosts()
-      .subscribe(posts => {
-        this.loadedPosts = posts;
-        this.isFetching = false;
-      });
+    this.onFetchPosts();
   }
 
   onCreatePost(postData: { title: string; content: string }) {
@@ -37,11 +33,15 @@ export class AppComponent implements OnInit {
       .subscribe(posts => {
         this.loadedPosts = posts;
         this.isFetching = false;
+      }, error => {
+        this.error = error.status + ' ' + error.statusText;
       });
   }
 
   onClearPosts() {
     // Send Http request
+    this.postsService.deletePosts()
+      .subscribe(() => this.loadedPosts = []);
   }
 
 }

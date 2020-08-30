@@ -12,7 +12,7 @@ export class PostsService {
   createAndStorePost(title: string, content: string) {
     const postData: Post = {title, content};
     this.http
-      .post<{name: string}>(
+      .post<{ name: string }>(
         'https://ng-course-project-d091d.firebaseio.com/posts.json',
         postData
       )
@@ -26,6 +26,9 @@ export class PostsService {
       .get<{ [key: string]: Post }>('https://ng-course-project-d091d.firebaseio.com/posts.json')
       .pipe(map(responseData => {
         const array: Post[] = [];
+        if (!responseData) {
+          return array;
+        }
         for (const key of Object.keys(responseData)) {
           if (responseData.hasOwnProperty(key)) {
             array.push({...responseData[key], id: key});
@@ -33,5 +36,9 @@ export class PostsService {
         }
         return array;
       }));
+  }
+
+  deletePosts() {
+    return this.http.delete('https://ng-course-project-d091d.firebaseio.com/posts.json');
   }
 }
